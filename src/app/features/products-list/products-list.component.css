@@ -1,0 +1,8 @@
+.products {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+
+  font-size: 20px;
+  font-weight: 600;
+}

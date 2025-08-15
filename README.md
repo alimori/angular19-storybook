@@ -1,4 +1,4 @@
-# Angular19Storybook
+# Angular19 + Storybook + Compodoc
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.6.
 
