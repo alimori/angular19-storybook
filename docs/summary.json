@@ -1,7 +1,10 @@
 [
-    {
-      "title": "Architecture Overview",
-      "file": "architecture.md"
-    }
-  ]
-  
+  {
+    "title": "Architecture Overview",
+    "file": "architecture.md"
+  },
+  {
+    "title": "Contributing Guide",
+    "file": "contributing.md"
+  }
+]
