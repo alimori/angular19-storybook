@@ -9,8 +9,8 @@
     "test": "ng test",
     "storybook": "ng run angular19-storybook:storybook",
     "build-storybook": "ng run angular19-storybook:build-storybook",
-    "compodoc": "npx compodoc -p tsconfig.app.json -s",
-    "compodoc:build": "npx compodoc -p tsconfig.app.json"
+    "compodoc": "npx compodoc -p tsconfig.app.json --includes docs --serve",
+    "compodoc:build": "npx compodoc -p tsconfig.app.json --includes docs"
   },
   "private": true,
   "dependencies": {
