@@ -2,58 +2,161 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.6.
 
-## Development server
+# 📂 Folder Structure
+```
+project-root/
+├── docs/
+│   ├── architecture.md
+│   ├── contributing.md
+│   ├── summary.json
+│
+├── src/
+│   ├── stories/
+│   │   ├── Architecture.stories.mdx
+│   │   ├── Contributing.stories.mdx
+│   │
+│   └── app/...
+│
+├── tsconfig.app.json
+├── angular.json
 
-To start a local development server, run:
+```
+Here’s a shared docs structure that works with both Compodoc and Storybook in your Angular 19 project.
 
-```bash
-ng serve
+---
+
+## 1️⃣ docs/summary.json
+
+This defines the sidebar menu for Compodoc:
+```json
+[
+  {
+    "title": "Architecture Overview",
+    "file": "architecture.md"
+  },
+  {
+    "title": "Contributing Guide",
+    "file": "contributing.md"
+  }
+]
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-## Code scaffolding
+## 2️⃣ Compodoc Config
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Add this script in package.json:
 
-```bash
-ng generate component component-name
+```json
+"scripts": {
+  "compodoc": "npx compodoc -p tsconfig.app.json --includes docs --serve"
+}
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Run it:
 
 ```bash
-ng generate --help
+npm run compodoc
 ```
 
-## Building
+- --includes docs tells Compodoc to look for extra docs in /docs.
 
-To build the project run:
+- summary.json defines their order in the sidebar
+
+**Note:** Without integrating **Compodoc** with high level **Markdown** documentaion, run this command:
 
 ```bash
-ng build
+npx compodoc -p tsconfig.app.json -s
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 3️⃣ Storybook Config (MDX integration)
+ 4.1 Install Storybook Docs Addon
+ ```bash
+npm install @storybook/addon-docs --save-dev
+```
 
-## Running unit tests
+4.2 .storybook/main.ts
+```ts
+import type { StorybookConfig } from '@storybook/angular';
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+const config: StorybookConfig = {
+  stories: [
+    '../src/**/*.stories.@(js|ts|mdx)',
+  ],
+  addons: [
+    '@storybook/addon-docs',
+  ],
+  framework: {
+    name: '@storybook/angular',
+    options: {},
+  },
+  docs: {
+    autodocs: true,
+  },
+  webpackFinal: async (config) => {
+    // Enable importing raw markdown with ?raw
+    config.module?.rules?.push({
+      resourceQuery: /raw/,
+      type: 'asset/source',
+    });
+    return config;
+  },
+};
+
+export default config;
+```
+
+
+## 4️⃣ Storybook MDX Pages
+
+src/stories/Architecture.stories.mdx
+```html
+import { Meta } from '@storybook/addon-docs';
+import architecture from '../../docs/architecture.md?raw';
+
+<Meta title="Documentation/Architecture" />
+
+<div dangerouslySetInnerHTML={{ __html: architecture }} />
+```
+
+src/stories/Contributing.stories.mdx
+```html
+import { Meta } from '@storybook/addon-docs';
+import contributing from '../../docs/contributing.md?raw';
+
+<Meta title="Documentation/Contributing" />
+
+<div dangerouslySetInnerHTML={{ __html: contributing }} />
+```
+
+?raw works with Vite and Webpack to import the raw markdown as a string.
+If your Storybook config doesn’t allow ?raw, you can just copy-paste content or use markdown-loader.
+
+## 5️⃣ Usage
+
+Run Storybook
 
 ```bash
-ng test
+npm run storybook
 ```
 
-## Running end-to-end tests
 
-For end-to-end (e2e) testing, run:
+→ See your /docs content inside the "Documentation" section in Storybook.
+
+Run Compodoc
 
 ```bash
-ng e2e
+npm run compodoc
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
-## Additional Resources
+→ See the same /docs content inside Compodoc’s sidebar.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## ✅ Advantages of integration Storybook + Compodoc + Markdown
+
+- Single source of truth (/docs)
+
+- Same content in both Storybook & Compodoc
+
+- No copy-pasting
+
+- Easy to maintain
