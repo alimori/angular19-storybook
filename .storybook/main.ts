@@ -6,8 +6,10 @@ const config: StorybookConfig = {
     "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"
   ],
   "addons": [
-    "@storybook/addon-docs",
-    "@storybook/addon-onboarding"
+    {
+      name: "@storybook/addon-docs",
+      options: { transcludeMarkdown: true },
+    }
   ],
   "framework": {
     "name": "@storybook/angular",
@@ -21,6 +23,6 @@ const config: StorybookConfig = {
         lazyCompilation: true,
       },
     },
-  },
+  }
 };
 export default config;
